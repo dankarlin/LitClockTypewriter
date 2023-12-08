@@ -6,12 +6,17 @@
 import sys
 import io
 import textwrap
+import os
 import keyboard
+import google.generativeai as palm
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
 from working_functions import display_image_8bpp_memory
 from IT8951.display import AutoEPDDisplay
+
+#palm.configure(api_key=os.environ['API_KEY'])
+palm.configure(api_key="REDACTED_API_KEY")
 
 print('Initializing EPD...')
 
@@ -45,7 +50,13 @@ FORE = 0
 # FONT_FILEPATH = '/usr/share/fonts/TTF/DejaVuSans.ttf'
 FONT_FILEPATH = 'remington_noiseless.ttf'
 
-TEXT = "Long enough text for the purpose of quickly testing how multiline splits work this should be enough. Now we need a bunch more text so that I can save time. 1 2 3 4 5 6 7 8 9 0. Long enough text for the purpose of quickly testing how multiline splits work this should be enough. Now we need a bunch more test so that I can save time. 1 2 3 4 5 6 7 8 9 0"
+TEXT = "Long enough text for the purpose of quickly testing how \
+multiline splits work this should be enough. Now we need a bunch \
+more text so that I can save time. 1 2 3 4 5 6 7 8 9 0. \
+Long enough text for the purpose of quickly testing how multiline \
+splits work this should be enough. Now we need a bunch more test so \
+that I can save time. 1 2 3 4 5 6 7 8 9 0"
+
 #TEXT = ""
 
 font = ImageFont.truetype(FONT_FILEPATH, size=FONTSIZE)
@@ -61,10 +72,14 @@ while 1:
     RECORDEDSTR = ''.join(list(keyboard.get_typed_strings(recorded, allow_backspace=True)))
     #print(RECORDEDSTR)
 
-    if RECORDEDSTR == "clear ":
-        TEXT = ""
-    else:
-        TEXT = TEXT + RECORDEDSTR
+    match RECORDEDSTR:
+        case 'clear ' | 'c ' | 'clr ':
+            TEXT = ""
+        case 'bard ' | 'b ':
+            response = palm.generate_text(prompt = TEXT)
+            TEXT = response.result
+        case other:
+            TEXT = TEXT + RECORDEDSTR
 
     LINES = textwrap.fill(TEXT, LINE_LENGTH)
     #çprint(LINES)

@@ -1,0 +1,5 @@
+keyboard
+google.generativeai
+pillow
+Cython
+pylint
