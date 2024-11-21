@@ -7,7 +7,7 @@ import sys
 import io
 import math
 import textwrap
-import os
+#import os
 import keyboard
 from PIL import Image
 from PIL import ImageFont
@@ -99,7 +99,7 @@ while 1:
 
     LINES = textwrap.fill(TEXT, LINE_LENGTH)
     #print(LINES)
-    
+
     #Y_OFFSET = Y_OFFSET - (math.floor(len(TEXT)*0.00700)*70)
     Y_OFFSET = Y_OFFSET - (math.floor(len(TEXT)*0.00700))
     #print (len(TEXT))
