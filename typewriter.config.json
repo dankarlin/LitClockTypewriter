@@ -1,0 +1,11 @@
+{
+    "apps": [{
+        "name": "typewriter",
+        "script": "/home/dan/Typewriter/typewriter.py",
+        "instances": "1",
+        "wait_ready": true,
+        "autorestart": true,
+        "max_restarts": 5,
+        "interpreter" : "/home/dan/Typewriter/.venv/bin/python",
+    }]
+}
