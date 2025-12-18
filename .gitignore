@@ -3,5 +3,6 @@
 *.o
 __pycache__
 *.egg-info
+.env
 *.env
 *.venv

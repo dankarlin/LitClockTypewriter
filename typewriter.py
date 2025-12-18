@@ -22,8 +22,9 @@ from working_functions import display_image_8bpp_memory
 from IT8951.display import AutoEPDDisplay
 from literature_clock import LiteratureClockData, download_csv_data
 
-#palm.configure(api_key=os.environ['API_KEY'])
-#palm.configure(api_key="REDACTED_API_KEY")
+# Configure Google API key from environment variable
+# Set API_KEY in your .env file or environment
+#palm.configure(api_key=os.environ.get('GOOGLE_API_KEY'))
 
 #print('Initializing EPD...')
 
