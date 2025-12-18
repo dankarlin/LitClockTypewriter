@@ -177,17 +177,17 @@ def find_typewriter_device():
 class TypewriterApp:
     """Main application class for the typewriter with clock mode support."""
 
-    def __init__(self, display_obj, font_obj, keyboard_device):
+    def __init__(self, display_obj, font_obj, kbd_device):
         """Initialize the typewriter application.
 
         Args:
             display_obj: AutoEPDDisplay instance
             font_obj: PIL ImageFont instance
-            keyboard_device: evdev.InputDevice for the keyboard
+            kbd_device: evdev.InputDevice for the keyboard
         """
         self.display = display_obj
         self.font = font_obj
-        self.keyboard_device = keyboard_device
+        self.keyboard_device = kbd_device
         self.mode = "clock"  # Start in clock mode by default
         self.command_buffer = ""  # Track last 6 chars for ;clock detection
         self.text = ""  # Start with empty text for clock mode
@@ -213,7 +213,7 @@ class TypewriterApp:
 
                     # Track shift state
                     if key_event.keycode in ['KEY_LEFTSHIFT', 'KEY_RIGHTSHIFT']:
-                        self.shift_pressed = (key_event.keystate == key_event.key_down)
+                        self.shift_pressed = key_event.keystate == key_event.key_down
                         continue
 
                     # Only process key down events
@@ -353,13 +353,13 @@ class TypewriterApp:
         # Render with error handling
         try:
             self._render_typewriter()
-        except TimeoutError as e:
-            print(f"Display busy, keystroke buffered")
+        except TimeoutError:
+            print("Display busy, keystroke buffered")
             # Text is already updated, will render on next keystroke
 
     def _render_typewriter(self):
         """Render and display the current typewriter text."""
-        LINES = textwrap.fill(self.text, LINE_LENGTH)
+        lines = textwrap.fill(self.text, LINE_LENGTH)
 
         # Dynamic Y-offset calculation (same as original)
         self.y_offset = self.y_offset - (math.floor(len(self.text)*0.00700))
@@ -368,7 +368,7 @@ class TypewriterApp:
         # Draw image (same as original)
         img = Image.new("L", SCREEN_SIZE, BACK)
         draw = ImageDraw.Draw(img)
-        draw.multiline_text(draw_point, LINES, font=self.font, fill=FORE,
+        draw.multiline_text(draw_point, lines, font=self.font, fill=FORE,
                           spacing=SPACING, align=ALIGNMENT)
         text_window = img.getbbox()
         img = img.crop(text_window)
@@ -380,7 +380,7 @@ class TypewriterApp:
         # Wait for display to be ready before updating
         try:
             self.display.epd.wait_display_ready()
-        except:
+        except Exception:  # pylint: disable=broad-except
             pass  # If wait fails, continue anyway
 
         # Display image from memory
@@ -426,7 +426,7 @@ class TypewriterApp:
         # Render clock display
         try:
             self._render_clock_display()
-        except TimeoutError as e:
+        except TimeoutError:
             print(f"Display busy, skipping update for {hour:02d}:{minute:02d}")
 
     def _render_clock_display(self):
@@ -447,7 +447,7 @@ class TypewriterApp:
         draw = ImageDraw.Draw(img)
 
         # Get actual image dimensions
-        img_width, img_height = img.size
+        _, img_height = img.size
 
         # Calculate text height to position from bottom
         bbox = draw.multiline_textbbox((0, 0), combined_text, font=self.font, spacing=SPACING)
@@ -460,7 +460,8 @@ class TypewriterApp:
 
         # Allow text to overflow at the top - older quotes get cut off naturally
         # y_position can be negative if text is taller than screen
-        print(f"Clock display: {len(self.clock_quotes)} quotes, text_height={text_height}px, y_position={y_position}px")
+        print(f"Clock display: {len(self.clock_quotes)} quotes, "
+              f"text_height={text_height}px, y_position={y_position}px")
 
         draw_point = (FIXED_X_OFFSET, y_position)
 
@@ -478,7 +479,7 @@ class TypewriterApp:
         # Wait for display to be ready
         try:
             self.display.epd.wait_display_ready()
-        except:
+        except Exception:  # pylint: disable=broad-except
             pass
 
         # Display
@@ -491,13 +492,13 @@ class TypewriterApp:
         if not os.path.exists(csv_path):
             try:
                 download_csv_data(csv_path)
-            except Exception as e:
-                print(f"Error downloading CSV data: {e}")
+            except Exception as err:
+                print(f"Error downloading CSV data: {err}")
 
         try:
             self.clock_data = LiteratureClockData(csv_path)
-        except Exception as e:
-            print(f"Error loading clock data: {e}")
+        except Exception as err:
+            print(f"Error loading clock data: {err}")
 
         # Display initial quote
         print("Starting in clock mode. Press any key to switch to typewriter mode.")

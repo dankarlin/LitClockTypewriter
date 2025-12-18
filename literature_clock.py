@@ -19,7 +19,8 @@ def download_csv_data(target_path):
     Raises:
         urllib.error.URLError: If download fails
     """
-    url = "https://raw.githubusercontent.com/JohannesNE/literature-clock/master/litclock_annotated.csv"
+    url = ("https://raw.githubusercontent.com/JohannesNE/"
+           "literature-clock/master/litclock_annotated.csv")
 
     # Create directory if it doesn't exist
     os.makedirs(os.path.dirname(target_path), exist_ok=True)

@@ -1,0 +1,34 @@
+[MASTER]
+# Files or directories to be skipped
+ignore=.venv,build,test
+
+[MESSAGES CONTROL]
+# Disable specific warnings
+disable=
+    # evdev uses dynamic attributes that pylint can't detect
+    no-member,
+    # Allow broad exception catching in display error handling
+    broad-exception-caught,
+    # Reasonable limits for this application
+    too-many-instance-attributes,
+    too-many-return-statements,
+    too-many-locals,
+    # Style preferences
+    no-else-return
+
+[FORMAT]
+# Maximum line length
+max-line-length=100
+
+# Maximum number of characters on a single line (for comments)
+max-module-lines=1000
+
+[DESIGN]
+# Increase limits for complex classes
+max-attributes=15
+max-locals=20
+max-returns=10
+
+[BASIC]
+# Good variable names
+good-names=i,j,k,e,x,y,_,id,buf,epd,img,fps

@@ -25,10 +25,10 @@ def print_system_info(display):
     """Function printing python version."""
     epd = display.epd
     print('System info:')
-    print('  display size: {}x{}'.format(epd.width, epd.height))
-    print('  img buffer address: {:X}'.format(epd.img_buf_address))
-    print('  firmware version: {}'.format(epd.firmware_version))
-    print('  LUT version: {}'.format(epd.lut_version))
+    print(f'  display size: {epd.width}x{epd.height}')
+    print(f'  img buffer address: {epd.img_buf_address:X}')
+    print(f'  firmware version: {epd.firmware_version}')
+    print(f'  LUT version: {epd.lut_version}')
     print()
 
 def clear_display(display):
@@ -38,7 +38,7 @@ def clear_display(display):
 
 def display_image_8bpp(display, img_path):
     """Function printing python version."""
-    print('Displaying "{}"...'.format(img_path))
+    print(f'Displaying "{img_path}"...')
 
     # clearing image to white
     display.frame_buf.paste(0xFF, box=(0, 0, display.width, display.height))
@@ -101,7 +101,8 @@ def _place_text(img, text, x_offset=0, y_offset=0):
         font = ImageFont.truetype('/usr/share/fonts/TTF/DejaVuSans.ttf', fontsize)
 
     img_width, img_height = img.size
-    text_width, _ = font.getsize(text)
+    bbox = font.getbbox(text)
+    text_width = bbox[2] - bbox[0]
     text_height = fontsize
 
     draw_x = (img_width - text_width)//2 + x_offset
