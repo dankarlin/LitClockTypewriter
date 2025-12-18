@@ -2,7 +2,11 @@
 
 A modern e-ink display interface for vintage USB typewriters, running on Raspberry Pi. Features a classic typewriter mode and a literary clock mode that displays time-appropriate quotes from literature.
 
-![finished product](IMG_2470.jpeg)
+![Literature Clock Mode](IMG_2573.jpeg)
+*Literature clock mode displaying time-based literary quotes*
+
+![Typewriter Mode](IMG_2470.jpeg)
+*Classic typewriter mode with vintage aesthetics*
 
 ## Overview
 
