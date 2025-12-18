@@ -1,4 +1,4 @@
-keyboard
+evdev
 google.generativeai
 pillow
 Cython
